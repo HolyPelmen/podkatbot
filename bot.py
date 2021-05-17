@@ -13,7 +13,15 @@ def selectUpperCaseFromBase (id):
     return result
     
 def selectLowerCaseFromBase (id):
-    result = db.execute_read_queryString(connection, "SELECT UpperCase FROM Compliments WHERE ID = {}".format(id))
+    result = db.execute_read_queryString(connection, "SELECT LowerCase FROM Compliments WHERE ID = {}".format(id))
+    return result
+
+def selectUpperCaseBoysFromBase (id):
+    result = db.execute_read_queryString(connection, "SELECT UpperCaseBoys FROM Compliments WHERE ID = {}".format(id))
+    return result
+    
+def selectLowerCaseBoysFromBase (id):
+    result = db.execute_read_queryString(connection, "SELECT LowerCaseBoys FROM Compliments WHERE ID = {}".format(id))
     return result
     
 def randID():
@@ -34,9 +42,14 @@ def query_podkat(inline_query):
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    button1 = types.KeyboardButton("Подкат😏")
-    markup.add(button1)
+    button1 = types.KeyboardButton("Подкат к девушке")
+    button2 = types.KeyboardButton("Подкат к парню")
+    button3 = types.KeyboardButton("Фотоподкат к девушке")
+    button4 = types.KeyboardButton("Фотоподкат к парню")
+    markup = types.ReplyKeyboardMarkup(row_width = 2).add(
+        button1, button2,
+        button3, button4
+    )
     bot.send_message(message.chat.id, 'Создан, чтобы служить вам', reply_markup=markup)
 
 @bot.message_handler(commands=['podkat'])
@@ -66,7 +79,9 @@ def podkatEnter(message):
 def podkatPrivate(message):
     rand_id = randID()
     if message.chat.type == 'private':
-        if message.text == "Подкат😏":
+        if message.text == "Подкат к девушке":
             bot.send_message(message.chat.id, format(selectUpperCaseFromBase(rand_id)))
+        elif message.text == "Подкат к парню":
+            bot.send_message(message.chat.id, format(selectUpperCaseBoysFromBase(rand_id)))
 
 bot.polling(none_stop=True)
